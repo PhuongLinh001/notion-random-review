@@ -26,12 +26,21 @@ async function run() {
   );
 
   const data = await res.json();
-  const items = data.results;
 
-  if (items.length === 0) {
-    console.log("No DONE items found");
-    return;
-  }
+// DEBUG: log response nếu có vấn đề
+if (!data.results) {
+  console.error("❌ Notion API response error:");
+  console.error(JSON.stringify(data, null, 2));
+  process.exit(1);
+}
+
+const items = data.results;
+
+if (items.length === 0) {
+  console.log("⚠️ No DONE items found");
+  return;
+}
+
 
   const shuffled = items.sort(() => 0.5 - Math.random());
   const picked = shuffled.slice(0, REVIEW_COUNT);
